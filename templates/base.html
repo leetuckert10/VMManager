@@ -1,0 +1,20 @@
+{% extends 'bootstrap/base.html' %}
+{% block title %}
+   VM Manager
+{% endblock %}
+
+{%block content %}
+    <body style="background-color:LightSkyBlue">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert-{{category}}"> {{message}}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% block sub_content %}
+    {% endblock %}
+{% endblock %}
