@@ -38,15 +38,18 @@ def login():
             password = form["password"]
             cursor = mysql.connection.cursor()
             query = f"SELECT password FROM user WHERE login_id = '{login_id}'" \
-                    f"AND password = '{password}'"
-            print(query)
+                    f" AND password = '{password}'"
             result = cursor.execute(query)
+            print(query)
             if result == 0:
                 flash("Login failed!", 'danger')
                 return render_template('login.html')
             else:
+                print("**************LOADING ACTIONS*****************")
+                cursor.close()
                 return render_template('actions.html')
-        except:
+        except mysql.connection.Error as err:
+            print(err)
             flash("Login failed!", 'danger')
             return render_template('login.html')
     else:
@@ -55,6 +58,16 @@ def login():
 
 @app.route('/actions')
 def actions():
+    print("*****************IN ACTIONS*********************")
+    cursor = mysql.connection.cursor()
+    query = "SELECT host_name FROM vm_data"
+    print(query)
+    result = cursor.execute(query)
+    if result > 0:
+        host_list = cursor.fetchall()
+        print(host_list)
+        return render_template('actions.html', hosts=host_list)
+
     return render_template('actions.html')
 
 

@@ -9,5 +9,12 @@
     <div class="jumbotron">
         <h1>Actions</h1>
     </div>
+
+    <select name="hosts" id="hosts" onfocus="this.selectedIndex = -1;">
+       {% for host in hosts %}
+           <option value="{{host.host_name}}">{{host.host_name}}</option>
+       {% endfor %}
+    </select>
 </center>
+
 {% endblock %}
