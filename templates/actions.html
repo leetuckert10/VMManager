@@ -10,11 +10,17 @@
         <h1>Actions</h1>
     </div>
 
-    <select name="hosts" id="hosts" onfocus="this.selectedIndex = -1;">
-       {% for host in hosts %}
-           <option value="{{host.host_name}}">{{host.host_name}}</option>
-       {% endfor %}
-    </select>
+    <form action="{{ url_for('foo')}}" name="host_name" method="POST">
+        <div class="form-group">
+            <select id="host_name" name="host_name">
+                <option value="{{hosts[0].host_name}}" selected>{{hosts[0].host_name}}</option>
+                {% for host in hosts[1:] %}
+                   <option value="{{host.host_name}}">{{host.host_name}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" />
+        </div>
+    </form>
 </center>
 
 {% endblock %}

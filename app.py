@@ -24,6 +24,10 @@ app.config['SECRET_KEY'] = os.urandom(24)
 mysql = MySQL(app)
 
 
+host_list: Tuple = ()
+host_name = None
+
+
 @app.route('/')
 def home() -> str:
     return render_template('index.html')
@@ -32,6 +36,7 @@ def home() -> str:
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+        global host_list
         try:
             form = request.form
             login_id = form["login_id"]
@@ -47,7 +52,8 @@ def login():
             else:
                 print("**************LOADING ACTIONS*****************")
                 cursor.close()
-                return render_template('actions.html')
+                host_list = get_database_data()
+                return render_template('actions.html', hosts=host_list)
         except mysql.connection.Error as err:
             print(err)
             flash("Login failed!", 'danger')
@@ -56,19 +62,22 @@ def login():
         return render_template('login.html')
 
 
-@app.route('/actions')
-def actions():
-    print("*****************IN ACTIONS*********************")
-    cursor = mysql.connection.cursor()
-    query = "SELECT host_name FROM vm_data"
-    print(query)
-    result = cursor.execute(query)
-    if result > 0:
-        host_list = cursor.fetchall()
-        print(host_list)
-        return render_template('actions.html', hosts=host_list)
+@app.route("/foo", methods=["POST"])
+def foo():
+    global host_name
+    host_name = request.form.get("host_name")
+    print(f"******************{host_name}************************")
+    return render_template('actions.html', hosts=host_list)
 
-    return render_template('actions.html')
+
+@app.route('/actions', methods=["GET", "POST"])
+def actions(hosts):
+    print("*****************IN ACTIONS*********************")
+    if request.medhod == "POST":
+        value = request.form.get['vm_host']
+        print(f"******************{value}************************")
+    else:
+        return render_template('actions.html', hosts=hosts)
 
 
 @app.route('/disk_usage')
@@ -104,7 +113,11 @@ def netstat_r():
 
 
 @app.route('/ifconfig')
-def ifconig():
+def ifconfig():
+#   value = request.form.get['vm_host']
+#   print(f"******************{value}************************")
+
+    print(f"************************{host_name}****************************")
     data = subprocess.Popen(["./calvin.sh", "ifconfig"], stdout=PIPE, stderr=PIPE)
     stdout, stderr = data.communicate()
     if stderr:
@@ -122,6 +135,18 @@ def passwd():
 @app.route("/about")
 def about():
     return render_template('about.html')
+
+
+def get_database_data():
+    cursor = mysql.connection.cursor()
+    query = "SELECT host_name FROM vm_data"
+    print(query)
+    result = cursor.execute(query)
+    if result > 0:
+        return cursor.fetchall()
+
+    return None
+
 
 
 if __name__ == '__main__':
