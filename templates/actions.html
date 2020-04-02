@@ -5,12 +5,15 @@
 {% endblock %}
 
 {%block sub_content %}
+
 <center>
     <div class="jumbotron">
         <h1>Actions</h1>
     </div>
 
-    <form action="{{ url_for('foo')}}" name="host_name" method="POST">
+    <h2>{{message}}</h2>
+
+    <form action="{{ url_for('redirect')}}" name="host_name" method="POST">
         <div class="form-group">
             <select id="host_name" name="host_name">
                 <option value="{{hosts[0].host_name}}" selected>{{hosts[0].host_name}}</option>
