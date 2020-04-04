@@ -20,7 +20,7 @@ Installation
 ------------
 
 Since this project was never deployed to any working environment because
-it was never intended for that purpose, there are no specifiic installation
+it was never intended for that purpose, there are no specific installation
 instructions. It does require MySQL and screen shots of the database
 structure are available in the presentation directory. The project never left
 the virtual environment of PyCharm. It certainly can be installed and used
